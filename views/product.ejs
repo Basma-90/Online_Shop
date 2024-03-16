@@ -1,0 +1,28 @@
+<%- include('parts/header')%>
+<%- include('parts/navbar')%>
+<% if (!product){ %>
+    <div class="alert alert-danger">
+        No product found
+    </div>
+<%} else { %>
+<div class="container">
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <img src="/<%= product.imageUrl %>" class="img-fluid"  style="height:500px; width:800px;">
+        </div>
+        <div class="col-lg-6">
+            <h1 style="color:rgb(136, 122, 17) ;"><%= product.name %></h1>
+            <p>Price: <%= product.price %> $</p>
+            <p>Category: <%= product.category %></p>
+            <p>Description: <%= product.description %></p>
+            <form action="/cart" method="post">
+                <input type="number" name="amount" class="form-control mb-2" min="0">
+                <input type="submit" value="Add to cart" class="btn btn-brown btn-block text-white ">
+            </form>
+        </div>
+    </div>
+</div>
+<% } %>
+
+
+<%- include('parts/footer')%>

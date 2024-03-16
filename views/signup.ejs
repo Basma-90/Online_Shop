@@ -1,0 +1,40 @@
+<%- include('parts/header') %>
+<%- include('parts/navbar') %>
+<div class="container text-center">
+    <h3>Create Account</h3>
+    <form action="/signup" method="post">
+        <input type="text" name="name" class="form-control mb-2" placeholder="Username">
+        <% let nameError = errors.find(e => e.path === 'name') %>
+        <% if (nameError) { %>
+            <p class="alert alert-danger">
+                <%= nameError.msg %>
+            </p>
+        <% } %>
+        <input type="email" name="email" class="form-control mb-2" placeholder="Email">
+        <% let error = errors.find(e => e.path === 'email') %>
+        <% if (error) { %>
+            <p class="alert alert-danger">
+                <%= error.msg %>
+            </p>
+        <% } %>
+        <input type="password" name="password" class="form-control mb-2" placeholder="Password">
+        <% let passwordError = errors.find(e => e.path === 'Password') %>
+        <% if (passwordError) { %>
+            <p class="alert alert-danger">
+                <%= passwordError.msg %>
+            </p>
+        <% } %>
+        <input type="password" name="password2" class="form-control mb-2" placeholder="Confirm Password">
+        <% let passwordError2 = errors.find(e => e.path === 'confirmPassword') %>
+        <% if (passwordError2) { %>
+            <p class="alert alert-danger">
+                <%= passwordError2.msg %>
+            </p>
+        <% } %>
+        <input type="submit" value="Sign Up" class="btn btn-brown text-white">
+    </form>
+    <div>
+        <p>Already have an account? <a href="/login">Login</a></p>
+    </div>
+</div>
+<%- include('parts/footer') %>
