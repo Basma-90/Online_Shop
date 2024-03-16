@@ -13,7 +13,7 @@ To get started with Online Shop, follow these steps:
 1. Clone this repository to your local machine:
 
     ```bash
-    git clone https://github.com/Basma-90/online-shop.git
+    git clone https://github.com/Basma-90/Online-shop.git
     ```
 
 2. Navigate to the project directory:
