@@ -18,6 +18,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true
+    },
+    isAdmin:{
+        type:Boolean,
+        default:false
     }
 });
 
@@ -42,25 +46,49 @@ const createUser = async (name, email, password) => {
     }
 };
 
-const login= async(email,password)=>{
-    try{
-        const emailExists=await User.findOne({email:email});
-        if(!emailExists){
+const login = async (email, password) => {
+    try {
+        const emailExists = await User.findOne({ email: email });
+        if (!emailExists) {
             throw new Error('Invalid email or password');
         }
-        const isMatch=await bcrypt.compare(password,emailExists.password);
-        if(!isMatch){
+        const isMatch = await bcrypt.compare(password, emailExists.password);
+        if (!isMatch) {
             throw new Error('Invalid email or password');
         }
-        return emailExists._id;
-    }
-    catch(err){
+        return { _id: emailExists._id, isAdmin: emailExists.isAdmin };
+    } catch (err) {
         throw new Error(err);
+    }
+};
+const getEmail = async (userId) => {
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user.email;
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+const getUserId=async (email)=>{
+    try {
+        const user = await User.findOne({email:email});
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user._id;
+    } catch (err) {
+        console.log(err);
     }
 }
 
 module.exports = {
     User,
     createUser,
-    login
+    login,
+    getEmail,
+    getUserId
 };
