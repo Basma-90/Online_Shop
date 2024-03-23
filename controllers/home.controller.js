@@ -1,4 +1,4 @@
-const productsModel = require('../models/products');
+const productsModel = require('../models/product.model');
 
 exports.getHome = async (req, res, next) => {
     try {
@@ -6,15 +6,24 @@ exports.getHome = async (req, res, next) => {
         let category = req.query.category;
         if (category && category !== 'all' && validCategories.includes(category)) {
             const products = await productsModel.getProductsByCategory(category);
-            res.render('index', { products: products });
+            res.render('index', { products: products,
+                isUser: req.session.userId,
+                error: req.flash('errors')[0],
+                isAdmin:req.session.isAdmin,
+                pageTitle:"Home"
+            });
         }
         else {
             const products = await productsModel.getAllProducts();
-            res.render('index', { products: products });
+            res.render('index', { products: products ,
+                isUser: req.session.userId,
+                error: req.flash('errors')[0],
+                isAdmin:req.session.isAdmin,
+                pageTitle:"Home"
+            });
         }
     }
     catch (err) {
-        console.log(error);
-        res.send('Failed to fetch products');
+        res.redirect('/error');
     }
 }
