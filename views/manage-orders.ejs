@@ -1,0 +1,85 @@
+<%- include('parts/header' ,{pageTitle:pageTitle}) %>
+<%- include('parts/navbar', { isUser: isUser ,isAdmin:isAdmin }) %>
+
+<div class="container">
+  <form action="/filterStatus" method="get">
+    <select name="status" class="form-control">
+        <option value="all">All</option>
+        <option value="sent">Sent</option>
+        <option value="complete">Complete</option>
+        <option value="pending">Pending</option>
+    </select>
+    <input type="submit" value="Filter" class="btn btn-brown mt-2 text-white" >
+</form>
+<br>
+<form action="/filterUsers" method ="get">
+  <input type="text" name="emailInput" value="email">
+  <input type="submit" value="Filter" class="btn btn-brown mt-2 text-white" >
+</form>
+  <% if(items.length === 0 ) { %>
+    <div class="alert alert-danger">There are no items</div>
+  <% } else { %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Email</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Price</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Total</th>
+          <th scope="col">Address</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (let i = 0; i < items.length; i++) { %>
+          <% let orderTotal = 0; %>
+          <% for (let j = 0; j < items[i].name.length; j++) { %>
+            <% let total = items[i].price[j] * items[i].amount[j]; %>
+            <% orderTotal += total; %>
+            <tr>
+              <td><%= i + 1 %></td>
+              <td><%= email %></td>
+              <td>
+                <a href="/product/<%= items[i].productId[j] %>">
+                  <%= items[i].name[j] %>
+                </a>
+              </td>
+              <td><%= items[i].price[j] %> $</td>
+              <td><%= items[i].amount[j] %></td>
+              <td><%= total %> $</td>
+              <td><%= items[i].address %></td>
+              <td><%= items[i].status %></td>
+              <td>
+                <% if (items[i].status === 'pending') { %>
+                  <form method="POST" action="/admin/orders" class="d-inline">
+                    <input type="hidden" name="orderId" value="<%= items[i]._id %>" />
+                    <input type="hidden" name="status" value="sent" />
+                    <button type="submit" class="btn btn-primary">Send</button>
+                  </form>
+                <% } %>
+                <% if (items[i].status === 'pending' || items[i].status === 'sent') { %>
+                  <form method="POST" action="/admin/orders" class="d-inline">
+                    <input type="hidden" name="orderId" value="<%= items[i]._id %>" />
+                    <input type="hidden" name="status" value="complete" />
+                    <button type="submit" class="btn btn-success">Complete</button>
+                  </form>
+                <% } %>
+              </td>
+            </tr>
+          <% } %>
+          <tr>
+            <td colspan="5"></td>
+            <td>Total</td>
+            <td><%= orderTotal %> $</td>
+            <td colspan="3"></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<%- include('parts/footer') %>

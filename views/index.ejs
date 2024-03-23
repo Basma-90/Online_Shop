@@ -1,5 +1,5 @@
-<%- include('parts/header')%>
-    <%- include('parts/navbar')%>
+<%- include('parts/header' ,{pageTitle:pageTitle}) %>
+<%- include('parts/navbar', { isUser: isUser , isAdmin:isAdmin }) %>
 
     <div class="container">
         <form action="/" method="get">
@@ -12,6 +12,11 @@
             </select>
             <input type="submit" value="Filter" class="btn btn-brown mt-2 text-white" >
         </form>
+        <%if (error) { %>
+        <p class="alert alert-danger">
+            <%= error.msg %>
+        </p>
+        <% } %>
         <% if (products.length === 0) { %>
             <div class="alert alert-danger">
                 No products found
@@ -32,6 +37,10 @@
                                 <p>Price: <%= product.price %> $ </p>
                                 <form action="/cart" method="post" class="align-self-center">
                                     <input type="number" name="amount" class="form-control mb-2" min="0">
+                                    <input type="hidden" name="name" value="<%= product.name %>">
+                                    <input type="hidden" name="productId" value="<%= product._id %>">
+                                    <input type="hidden" name="price" value="<%= product.price %>">
+                                    <input type="hidden" name="redirectTo" value="/" >
                                     <input type="submit" value="Add to cart" class="btn btn-brown btn-block text-white ">
                                 </form>
                             </div>

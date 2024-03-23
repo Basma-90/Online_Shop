@@ -1,5 +1,6 @@
-<%- include('parts/header')%>
-<%- include('parts/navbar')%>
+<%- include('parts/header' ,{pageTitle:pageTitle}) %>
+<%- include('parts/navbar', { isUser: isUser ,isAdmin:isAdmin }) %>
+
 <% if (!product){ %>
     <div class="alert alert-danger">
         No product found
@@ -17,8 +18,17 @@
             <p>Description: <%= product.description %></p>
             <form action="/cart" method="post">
                 <input type="number" name="amount" class="form-control mb-2" min="0">
+                <input type="hidden" name="name" value="<%= product.name %>">
+                <input type="hidden" name="productId" value="<%= product._id %>">
+                <input type="hidden" name="price" value="<%= product.price %>">
+                <input type="hidden" name="redirectTo" value="/product/<%= product._id %>" >
                 <input type="submit" value="Add to cart" class="btn btn-brown btn-block text-white ">
             </form>
+            <%if(error) { %>
+                <p class="alert alert-danger">
+                    <%= error.msg %>
+                </p>
+            <% } %>
         </div>
     </div>
 </div>

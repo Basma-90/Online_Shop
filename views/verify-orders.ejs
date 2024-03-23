@@ -1,0 +1,25 @@
+<%- include('parts/header' ,{pageTitle:pageTitle}) %>
+<%- include('parts/navbar', { isUser: isUser ,isAdmin:isAdmin }) %>
+
+<div class="container text-center">
+    <% if(error) { %>
+        <p class="alert alert-danger">
+        <%= error.msg %>
+        <% } %>
+    <form action="/cart/checkout" method="POST">
+    <% items.forEach(item => { %>
+        
+            <input type="hidden" name="cartId" value="<%= item._id %>">
+            <input type="hidden" name="name" value="<%= item.name %>">
+            <input type="hidden" name="price" value="<%= item.price %>">
+            <input type="hidden" name="amount" value="<%= item.amount %>">
+            <input type="hidden" name="productId" value="<%= item.productId %>">
+            <input type="hidden" name="userId" value="<%= item.userId %>">
+        
+    <% }); %>
+    <input type="text" name="address" placeholder="Enter the Address" class="form-control">
+    <input type="submit" value="Verify" class="btn btn-primary">
+</form>
+</div>
+
+<%- include('parts/footer') %>

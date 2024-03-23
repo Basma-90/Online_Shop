@@ -1,0 +1,73 @@
+<%- include('parts/header' ,{pageTitle:pageTitle}) %>
+<%- include('parts/navbar', { isUser: isUser, isAdmin:isAdmin }) %>
+
+<div class="container">
+
+    <% if(items.length === 0) { %>
+        <div class="alert alert-danger">There are no items</div>
+    <% } else { %>
+    
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Product name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i = 0; i < items.length; i++) { %>
+                    <tr>
+                        <th scope="row"> <%= i+1 %> </th>
+                        <td> <a href="/product/<%= items[i].productId %>"><%= items[i].name %></a> </td>
+                        <td> <%= items[i].price %> $ </td>
+                        <td> 
+                            <form method="POST" action="/cart/save">
+                                <input type="hidden" name="cartId" value="<%= items[i]._id %>">
+                                <input type="text" name="amount" class="form-control" value="<%= items[i].amount %>"> 
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </form>
+                        </td>
+                        <td> <%= items[i].price * items[i].amount %> $ </td>
+                        <td class="btn-group">
+                            <a class="btn btn-primary" href="/verify-order?order=<%= items[i]._id %>">Order</a>
+                            <form method="POST" action="/cart/delete">
+                                <input type="hidden" name="cartId" value="<%= items[i]._id %>">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% } %>
+                <form method="POST" action="cart/checkout">
+                    <tr>
+                        <input type="hidden" name="address" placeholder="Enter the Address" class="form-control">
+                        <% items.forEach(item => { %>
+                            <input type="hidden" name="name[]" value="<%= item.name %>">
+                            <input type="hidden" name="price[]" value="<%= item.price %>">
+                            <input type="hidden" name="amount[]" value="<%= item.amount %>">
+                            <input type="hidden" name="productId[]" value="<%= item.productId %>">
+                            <input type="hidden" name="userId[]" value="<%= item.userId %>">
+                        <% }); %>
+                        <td>
+                            <button type="submit" class="btn btn-success" href="/cart/verify-orders?order=<%= items%>">Checkout</button>
+                        </td>
+                    </tr>
+                </form>
+                <form method="POST" action="/cart/deleteAll">
+                    <tr>
+                        <td colspan="6" class="text-right">
+                            <button type="submit" class="btn btn-danger">Delete all</button>
+                        </td>
+                    </tr>
+                </form>
+            </tbody>
+        </table>
+
+    <% } %>
+
+</div>
+
+<%- include('parts/footer') %>

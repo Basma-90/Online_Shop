@@ -1,0 +1,69 @@
+<%- include('parts/header', { pageTitle: pageTitle }) %>
+<%- include('parts/navbar', { isUser: isUser, isAdmin: isAdmin }) %>
+
+<div class="container">
+
+    <% if (items.length === 0) { %>
+        <p class="alert alert-danger">There are no items</p>
+    <% } else { %>
+    
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% let overallTotal = 0; %>
+                <% for (let i = 0; i < items.length; i++) { %>
+                    <tr>
+                        <th scope="row"> <%= i + 1 %> </th>
+                        <td> 
+                            <% for (let j = 0; j < items[i].name.length; j++) { %>
+                                <a href="/product/<%= items[i].productId[j] %>"><%= items[i].name[j] %></a><br>
+                            <% } %>
+                        </td>
+                        <td> 
+                            <% for (let j = 0; j < items[i].price.length; j++) { %>
+                                <%= items[i].price[j] %> $<br>
+                            <% } %>
+                        </td>
+                        <td> 
+                            <% for (let j = 0; j < items[i].amount.length; j++) { %>
+                                <%= items[i].amount[j] %><br>
+                            <% } %>
+                        </td>
+                        <td> 
+                            <% let itemTotal = 0; %>
+                            <% for (let j = 0; j < items[i].price.length; j++) { %>
+                                <% const totalPrice = items[i].price[j] * items[i].amount[j]; %>
+                                <% itemTotal += totalPrice; %>
+                            <% } %>
+                            <% overallTotal += itemTotal; %>
+                            <%= itemTotal %> $<br>
+                        </td>
+                        <td><%= items[i].address %></td>
+                        <td><%= items[i].status %></td>
+                        <td>
+                            <form method="POST" action="/orders/cancel">
+                                <input type="hidden" name="orderId" value="<%= items[i]._id %>">
+                                <button type="submit" class="btn btn-danger">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+    <% } %>
+
+</div>
+
+<%- include('parts/footer') %>
