@@ -9,6 +9,9 @@ const { dbConnct } = require('./config/dbConfig');
 const homeRouter = require('./routes/home.route');
 const productRouter = require('./routes/product.route');
 const authRouter = require('./routes/auth.route');
+const cartRouter= require('./routes/cart.route');
+const orderRouter= require('./routes/order.route');
+const adminRouter=require('./routes/admin.route')
 
 const app = express();
 
@@ -45,6 +48,39 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/', homeRouter);
 app.use('/product', productRouter);
 app.use(authRouter);
+app.use('/cart',cartRouter);
+app.use('/',orderRouter);
+app.use('/admin',adminRouter)
+
+
+
+//error handling
+app.get("/error", (req, res, next) => {
+    res.status(500);
+    res.render("error.ejs", {
+        isUser: req.session.userId,
+        isAdmin: req.session.isAdmin,
+        pageTitle: "Error"
+    });
+});
+
+app.get("/not-admin", (req, res, next) => {
+    res.status(403);
+    res.render("not-admin", {
+        isUser: req.session.userId,
+        isAdmin: false,
+        pageTitle: "Not Allowed"
+    });
+});
+
+app.use((req, res, next) => {
+    res.status(404);
+    res.render("not-found", {
+        isUser: req.session.userId,
+        isAdmin: req.session.isAdmin,
+        pageTitle: "Page Not Found"
+    });
+});
 
 // Start the server
 const PORT = process.env.PORT || 3000;
